@@ -1,6 +1,4 @@
-const noms = ['Portàtil', 'Ratolí', 'Monitor', 'Teclat'];
-const stocks = [5, 20, 3, 12];
-const preus = [800, 25, 180, 45];
+const productes = [];
 
 //Importar prompt-sync
 const prompt = require('prompt-sync')();
@@ -18,44 +16,48 @@ function mostrarMenu(){
 }
 
 function afegirProducte(){
-    let nom = prompt('Nom del producte: ')?.trim() ?? '';
-    let stock = Number(prompt('Stock del producte: ')?.trim() ?? '');
-    let preu = Number(prompt('Preu del producte')?.trim() ?? '');
 
-    if (nom === '') return 'El nom no pot estar buit';
+    let productesNom = prompt('Nom del producte: ')?.trim() ?? '';
+    let productesStock = Number(prompt('Stock del producte: ')?.trim() ?? '');
+    let productesPreu = Number(prompt('Preu del producte')?.trim() ?? '');
 
-    if (isNaN(stock) || isNaN(preu) || stock <= 0 | preu <= 0){
+    if (productesNom === '') return 'El nom no pot estar buit';
+
+    if (isNaN(productesStock) || isNaN(productesPreu) || productesStock <= 0 | productesPreu <= 0){
         return 'Stock o preu no vàlids';
     }
 
-    noms.push(nom);
-    stocks.push(stock);
-    preus.push(preu);
+    const nouProducte = {
+        nom: productesNom,
+        stock: productesStock,
+        preu: productesPreu
+    }
+
+    productes.push(nouProducte);
 
     return 'Producte afegit correctament!';
 }
 
 
 function mostrarInventari(){
-    if (noms.length === 0) return 'Inventari buit';
+    if (productes.length === 0) return 'Inventari buit';
 
-    const llistatProductes = noms
-        .map((nom, i) => `${i + 1}. ${nom} - Stock: ${stocks[i]} - Preu: ${preus[i]}€`)
+    const llistatProductes = productes
+        .map((producte, i) => `${i + 1}. ${producte.nom} - Stock: ${producte.stock} - Preu: ${producte.preu}€`)
         .join('\n');
 
     return `==== LListat de productes ===\n${llistatProductes}`;
 }
 
 function buscarProducte(){
-    if (noms.length === 0) return 'Inventari buit';
+    if (productes.length === 0) return 'Inventari buit';
 
     let nomBuscat = prompt('Nom del producte a buscar: ')?.trim() ?? '';
 
-    let producte = noms.find(
-        nom => nom.toLowerCase() === nomBuscat.toLowerCase()
-    );
+    let accio = productes
+        .find(producte => producte.nom.toLowerCase() === nomBuscat.toLowerCase());
 
-    if (producte){
+    if (accio){
         return 'Producte trobat';
     }else{
         return 'Producte no trobat';
@@ -64,11 +66,11 @@ function buscarProducte(){
 
 
 function mostrarStockBaix(){
-    if (noms.length === 0) return 'Inventari buit';
+    if (productes.length === 0) return 'Inventari buit';
 
-    const productesStockBaix = noms
-        .filter((_, index) => stocks[index] < 5)
-        .map(nom => `${nom}`)
+    const productesStockBaix = productes
+        .filter(producte => producte.stock < 5)
+        .map(producte => `${producte.nom}`)
         .join(`\n`);
 
     if (!productesStockBaix) return 'No hi ha productes amb stock baix';
@@ -84,10 +86,11 @@ function aplicarDescompte(){
         return 'Percentatge no vàlid!';
     }
 
-    const preusDescompte = preus.map(preu => preu - (preu * percentatge / 100));
+    const preusDescompte = productes
+        .map(producte => producte.preu - (producte.preu * percentatge / 100));
 
-    const llistatDescompte = noms
-        .map((nom, i) => `${i + 1}. ${nom} - Stock: ${stocks[i]} - Preu: ${preusDescompte[i]}€`)
+    const llistatDescompte = productes
+        .map((producte, i) => `${i + 1}. ${producte.nom} - Stock: ${producte.stock} - Preu: ${preusDescompte[i]}€`)
         .join('\n');
     
     return `==== Llistat de productes amb descompte ====\n${llistatDescompte}`;
@@ -102,10 +105,8 @@ function eliminarProducte(){
 
     let index = posicio - 1;
 
-    if (index >= 0 && index < noms.length){
-        noms.splice(index, 1);
-        stocks.splice(index, 1);
-        preus.splice(index, 1);
+    if (index >= 0 && index < productes.length){
+        productes.splice(index, 1);
 
         return 'Producte eliminat!';
     }else{
