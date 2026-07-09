@@ -1,8 +1,10 @@
 const productes = [];
-
-//Importar prompt-sync
 const prompt = require('prompt-sync')();
 
+/**
+ * Mostra el menú d'opcions i demana a l'usuari que triï una opció.
+ * @returns {number} Número de l'opció seleccionada.
+ */
 function mostrarMenu(){
     console.log('1. Afegir producte');
     console.log('2. Mostrar inventari');
@@ -15,8 +17,11 @@ function mostrarMenu(){
     return Number(prompt('Tria una opció (1-7): '));
 }
 
+/**
+ * Demana les dades d'un producte i l'afegeix a l'inventari si són vàlides.
+ * @returns {string} Missatge amb el resultat de l'operació.
+ */
 function afegirProducte(){
-
     let productesNom = prompt('Nom del producte: ')?.trim() ?? '';
     let productesStock = Number(prompt('Stock del producte: ')?.trim() ?? '');
     let productesPreu = Number(prompt('Preu del producte')?.trim() ?? '');
@@ -31,14 +36,17 @@ function afegirProducte(){
         nom: productesNom,
         stock: productesStock,
         preu: productesPreu
-    }
+    };
 
     productes.push(nouProducte);
 
     return 'Producte afegit correctament!';
 }
 
-
+/**
+ * Mostra el llistat complet dels productes de l'inventari.
+ * @returns {string} Text amb el llistat o un missatge si l'inventari està buit.
+ */
 function mostrarInventari(){
     if (productes.length === 0) return 'Inventari buit';
 
@@ -49,6 +57,10 @@ function mostrarInventari(){
     return `==== LListat de productes ===\n${llistatProductes}`;
 }
 
+/**
+ * Busca un producte pel seu nom dins de l'inventari.
+ * @returns {string} Missatge indicant si el producte s'ha trobat o no.
+ */
 function buscarProducte(){
     if (productes.length === 0) return 'Inventari buit';
 
@@ -64,7 +76,10 @@ function buscarProducte(){
     }
 }
 
-
+/**
+ * Mostra els productes que tenen un stock inferior a 5 unitats.
+ * @returns {string} Llistat dels productes amb stock baix o un missatge si no n'hi ha.
+ */
 function mostrarStockBaix(){
     if (productes.length === 0) return 'Inventari buit';
 
@@ -78,7 +93,10 @@ function mostrarStockBaix(){
     return `==== Productes amb stock baix ===\n${productesStockBaix}`;
 }
 
-
+/**
+ * Aplica un descompte a tots els preus i mostra el resultat.
+ * @returns {string} Llistat de productes amb el descompte aplicat o un missatge d'error.
+ */
 function aplicarDescompte(){
     let percentatge = Number(prompt('Percentatge de descompte')?.trim() ?? '');
 
@@ -92,10 +110,14 @@ function aplicarDescompte(){
     const llistatDescompte = productes
         .map((producte, i) => `${i + 1}. ${producte.nom} - Stock: ${producte.stock} - Preu: ${preusDescompte[i]}€`)
         .join('\n');
-    
+
     return `==== Llistat de productes amb descompte ====\n${llistatDescompte}`;
 }
 
+/**
+ * Elimina un producte de l'inventari segons la seva posició.
+ * @returns {string} Missatge amb el resultat de l'eliminació.
+ */
 function eliminarProducte(){
     console.log(mostrarInventari());
 
@@ -114,8 +136,12 @@ function eliminarProducte(){
     }
 }
 
+/**
+ * Inicia el bucle principal del programa i gestiona les opcions del menú.
+ * @returns {boolean} Retorna false quan l'usuari tria sortir.
+ */
 function main(){
-    let opcio, resultat;
+    let opcio;
 
     while (true){
         opcio = mostrarMenu();
